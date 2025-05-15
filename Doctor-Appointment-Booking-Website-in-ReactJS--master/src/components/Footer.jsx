@@ -1,48 +1,55 @@
-import React from 'react'
-import { assets } from '../assets/assets'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <div className='md:mx-10'>
-        <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm'>
-            {/*---------------Left Section--------------------*/}
-            <div>
-                <img className='mb-5 w-40' src={assets.logo} alt="" />
-                <p className='w-full md:w-2/3 text-gray-600 leading-6'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="container mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">MediConnect</h2>
+            <p className="text-sm">
+              Connecting healthcare professionals with patients for better healthcare delivery and management.
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li><Link to="/about" className="hover:text-white">About Us</Link></li>
+              <li><Link to="/services" className="hover:text-white">Services</Link></li>
+              <li><Link to="/doctors" className="hover:text-white">Find Doctors</Link></li>
+              <li><Link to="/contact" className="hover:text-white">Contact</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-4">For Doctors</h3>
+            <ul className="space-y-2">
+              <li><Link to="/register/doctor" className="hover:text-white">Join as Doctor</Link></li>
+              <li><Link to="/doctor/dashboard" className="hover:text-white">Doctor Dashboard</Link></li>
+              <li><Link to="/terms" className="hover:text-white">Terms & Conditions</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
+            <div className="flex space-x-4">
+              <a href="#" className="hover:text-white"><FaFacebook size={24} /></a>
+              <a href="#" className="hover:text-white"><FaTwitter size={24} /></a>
+              <a href="#" className="hover:text-white"><FaLinkedin size={24} /></a>
+              <a href="#" className="hover:text-white"><FaInstagram size={24} /></a>
             </div>
-             {/*---------------Center Section--------------------*/}
-             <div>
-                <p className='text-xl font-medium mb-5'>COMPANY</p>
-                <ul className='flex flex-col gap-2 text-gray-600'>
-                    <li>Home</li>
-                    <li>About us</li>
-                    <li>contact us</li>
-                    <li>privacy policy</li>
-                </ul>
-             </div>
-             {/*---------------Right Section--------------------*/}
-            <div>
-                <p className='text-xl font-medium mb-5'>GET IN TOUCH</p>
-                <ul className='flex flex-col gap-2 text-gray-600'>
-                    <li>8095381183</li>
-                    <li>anils.pvg1234@gmail.comk</li>
-                </ul>
-                
-            
-    
-                
-            </div>
-    
-
+          </div>
         </div>
-        {/*--------------Copyright Text------------------- */}
-      <div>
-        <hr />
-        <p className='py-5 text-sm text-center'>Copyright 2024@ Prescripto-All Right Reserved.</p>
+        
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+          <p>&copy; {new Date().getFullYear()} MediConnect. All rights reserved.</p>
+        </div>
       </div>
-    </div>
-  )
-}
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

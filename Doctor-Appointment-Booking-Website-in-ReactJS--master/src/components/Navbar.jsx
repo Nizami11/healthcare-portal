@@ -10,20 +10,12 @@ const Navbar = () => {
             MediConnect
           </Link>
           
-          <div className="flex items-center space-x-4">
-            <Link 
-              to="/login" 
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
-            >
-              Login
-            </Link>
-            <Link 
-              to="/register" 
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Register
-            </Link>
-          </div>
+          <Link 
+            to="/select-role" 
+            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Login / Register
+          </Link>
         </div>
       </div>
     </nav>

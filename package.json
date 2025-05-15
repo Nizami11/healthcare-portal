@@ -1,0 +1,13 @@
+{
+  "name": "healthcare-portal",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd Doctor-Appointment-Booking-Website-in-ReactJS--master && npm run dev",
+    "install-all": "npm install && cd backend && npm install && cd ../Doctor-Appointment-Booking-Website-in-ReactJS--master && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

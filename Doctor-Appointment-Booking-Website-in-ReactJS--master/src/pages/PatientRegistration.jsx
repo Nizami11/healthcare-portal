@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import DoctorRegistration from './DoctorRegistration';
+import { Link } from 'react-router-dom';
+import RegistrationSuccess from '../components/RegistrationSuccess';
 
 const PatientRegistration = () => {
   const [formData, setFormData] = useState({
@@ -9,21 +9,23 @@ const PatientRegistration = () => {
     password: '',
     confirmPassword: ''
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle patient registration
+    // Handle registration logic
+    setIsSubmitted(true);
   };
+
+  if (isSubmitted) {
+    return <RegistrationSuccess userType="patient" />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow">
-        <div>
-          <h2 className="text-3xl font-bold text-center">Patient Registration</h2>
-          <p className="mt-2 text-center text-gray-600">Create your patient account</p>
-        </div>
-
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <h2 className="text-3xl font-bold text-center">Patient Registration</h2>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="space-y-4">
             <input
               type="text"
@@ -62,52 +64,12 @@ const PatientRegistration = () => {
             type="submit"
             className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            Register as Patient
+            Register
           </button>
         </form>
-
-        <div className="text-sm text-center">
-          <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
-            Already have an account? Login
-          </Link>
-        </div>
       </div>
     </div>
   );
 };
 
-const Register = () => {
-  const navigate = useNavigate();
-
-  const handlePatientClick = () => {
-    navigate('/register/patient');
-  };
-
-  const handleDoctorClick = () => {
-    navigate('/register/doctor');
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow text-center">
-        <h2 className="text-3xl font-bold">Choose Registration Type</h2>
-        <div className="space-y-4 mt-8">
-          <button
-            onClick={handlePatientClick}
-            className="w-full py-3 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Register as Patient
-          </button>
-          <button
-            onClick={handleDoctorClick}
-            className="w-full py-3 px-4 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50"
-          >
-            Register as Doctor
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Register;
+export default PatientRegistration;

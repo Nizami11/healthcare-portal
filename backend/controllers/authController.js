@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
@@ -5,61 +6,57 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/asyncHandler');
 const crypto = require('crypto');
 
-// @desc    Register user
-// @route   POST /api/auth/register
-// @access  Public
-exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+exports.register = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const userExists = await User.findOne({ email });
 
-  // Create user
-  const user = await User.create({
-    name,
-    email,
-    password,
-    role
-  });
+    if (userExists) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
 
-  // Create initial profile based on role
-  if (role === 'doctor') {
-    await Doctor.create({
-      user: user._id
+    const user = await User.create(req.body);
+    const token = generateToken(user._id);
+
+    res.status(201).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        userType: user.userType
+      }
     });
-  } else if (role === 'patient') {
-    await Patient.create({
-      user: user._id
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const token = generateToken(user._id);
+    res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        userType: user.userType
+      }
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  sendTokenResponse(user, 201, res);
-});
-
-// @desc    Login user
-// @route   POST /api/auth/login
-// @access  Public
-exports.login = asyncHandler(async (req, res, next) => {
-  const { email, password } = req.body;
-
-  // Validate email & password
-  if (!email || !password) {
-    return next(new ErrorResponse('Please provide an email and password', 400));
-  }
-
-  // Check for user
-  const user = await User.findOne({ email }).select('+password');
-
-  if (!user) {
-    return next(new ErrorResponse('Invalid credentials', 401));
-  }
-
-  // Check if password matches
-  const isMatch = await user.matchPassword(password);
-
-  if (!isMatch) {
-    return next(new ErrorResponse('Invalid credentials', 401));
-  }
-
-  sendTokenResponse(user, 200, res);
-});
+};
 
 // @desc    Get current logged in user
 // @route   GET /api/auth/me
@@ -177,5 +174,11 @@ const sendTokenResponse = (user, statusCode, res) => {
     success: true,
     token,
     user: userData
+  });
+};
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '30d',
   });
 };

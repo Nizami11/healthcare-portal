@@ -1,50 +1,83 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const { userType } = useParams();
 
-    const [state,setState] = useState('Sign Up')
-    const [email,setEmail] =useState('')
-    const [password,setPassword] =useState('')
-    const [name,setName] =useState('')
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError('');
 
-
-    const onSubmitHandler = async (event) =>{
-        event.preventDefault()
-
+    // Hardcoded credentials for testing
+    if (userType === 'patient' && 
+        credentials.email === 'patient@mediconnect.com' && 
+        credentials.password === 'patient123') {
+      login({ id: '3', email: credentials.email }, 'patient');
+      navigate('/patient/dashboard');
+    } else if (userType === 'doctor' && 
+        credentials.email === 'doctor@mediconnect.com' && 
+        credentials.password === 'doctor123') {
+      login({ id: '2', email: credentials.email }, 'doctor');
+      navigate('/doctor/dashboard');
+    } else if (userType === 'admin' && 
+        credentials.email === 'admin@mediconnect.com' && 
+        credentials.password === 'admin123') {
+      login({ id: '1', email: credentials.email }, 'admin');
+      navigate('/admin/dashboard');
+    } else {
+      setError('Invalid credentials. For patient testing use: patient@mediconnect.com / patient123');
     }
+  };
 
   return (
-    <form className='min-h-[80vh] flex items-center'>
-        <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg'>
-            <p className='text-2xl font-semibold'>{state === 'Sign Up' ? "Create Account" : "Login"} </p>
-            <p>Please {state === 'Sign Up' ? "sign up" : "log in"}  to book appointment</p>
-            {
-                state === "Sign Up" &&  <div className='w-full'>
-                <p>Full Name</p>
-                <input className='border border-zinc-300 rounded w-full p-2 mt-1' type="text" onChange={(e)=>setName(e.target.name)} value={name} required/>
-            </div>
-            }
-            
-            <div className='w-full'>
-                <p>Email</p>
-                <input className='border border-zinc-300 rounded w-full p-2 mt-1' type="email" onChange={(e)=>setEmail(e.target.name)} value={email}  required/>
-            </div>
-            <div className='w-full'>
-                <p>Password</p>
-                <input className='border border-zinc-300 rounded w-full p-2 mt-1'  type="password" onChange={(e)=>setPassword(e.target.name)} value={password} required/>
-            </div>
-            <button className='bg-primary text-white w-full py-2 rounded-md text-base'>{state === 'Sign Up' ? "Create Account" : "Login"}</button>
-           {
-              state === "Sign Up"
-              ? <p>Already have an account? <span onClick={()=>setState('Login')} className='text-primary underline cursor-pointer'> Login here</span></p>
-              :<p>Create an new account? <span onClick={()=>setState('Sign Up')} className='text-primary underline cursor-pointer'>click here</span> </p>
-           }
-        </div>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow">
+        <h2 className="text-3xl font-bold text-center capitalize">
+          {userType} Login
+        </h2>
+        
+        {error && (
+          <div className="bg-red-50 text-red-500 p-3 rounded text-center">
+            {error}
+          </div>
+        )}
 
-    </form>
-      
-    
-  )
-}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <input
+              type="email"
+              required
+              className="w-full px-3 py-2 border rounded"
+              placeholder="Email"
+              value={credentials.email}
+              onChange={(e) => setCredentials({...credentials, email: e.target.value})}
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              required
+              className="w-full px-3 py-2 border rounded"
+              placeholder="Password"
+              value={credentials.password}
+              onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          >
+            Sign in
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
-export default Login
+export default Login;
